@@ -19,7 +19,7 @@ class Tag(models.Model):
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
-    image_path = models.CharField(max_length=200)
+    image = models.ImageField(upload_to="posts")
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     tags = models.ManyToManyField(Tag)

@@ -1,7 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
+from .forms import CategoryFilterForm
 from .models import Post
+
 
 
 def index(request):
@@ -10,13 +12,20 @@ def index(request):
 
 def post_list(request):
     posts = Post.objects.all()
+    filter_form = CategoryFilterForm(request.GET)
 
-    result = "<h1>All Posts</h1>"
+    if filter_form.is_valid():
+        category_id = filter_form.cleaned_data["category"]
 
-    for post in posts:
-        result += f"<p>{post.title}</p>"
+        if category_id:
+            posts = posts.filter(category_id=category_id)
 
-    return HttpResponse(result)
+    context = {
+        "filter_form": filter_form,
+        "posts": posts,
+    }
+
+    return render(request, "core/post_list.html", context)
 
 
 def photography_posts(request):
