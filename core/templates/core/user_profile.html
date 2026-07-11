@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+{{ profile_user.username }} - ArtsyGram
+{% endblock %}
+
+{% block content %}
+<h1>{{ profile_user.username }}</h1>
+
+{% if is_own_profile %}
+    <p>This is your profile.</p>
+
+    <a href="{% url 'create-post' %}">
+        Add Post
+    </a>
+{% endif %}
+
+{% if posts %}
+    {% for post in posts %}
+        <article>
+            <h2>{{ post.title }}</h2>
+
+            {% if post.image %}
+                <img
+                    src="{{ post.image.url }}"
+                    alt="{{ post.title }}"
+                    width="300"
+                >
+            {% endif %}
+
+            <p>{{ post.category.name }}</p>
+            <p>{{ post.description }}</p>
+
+            {% if is_own_profile %}
+                <form
+                    action="{% url 'delete-post' post.id %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+                    <button type="submit">
+                        Delete Post
+                    </button>
+                </form>
+            {% endif %}
+        </article>
+    {% endfor %}
+{% else %}
+    <p>This user has not posted anything yet.</p>
+{% endif %}
+{% endblock %}

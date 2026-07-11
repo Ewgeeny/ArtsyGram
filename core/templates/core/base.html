@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ArtsyGram{% endblock %}</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <nav>
+            <a href="{% url 'main-page' %}">All Posts</a>
+
+            <a href="{% url 'user-profile' user.username %}">
+                My Profile
+            </a>
+
+            <a href="{% url 'create-post' %}">
+                Create Post
+            </a>
+
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        </nav>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

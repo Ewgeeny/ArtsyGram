@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+All Posts - ArtsyGram
+{% endblock %}
+
+{% block content %}
+<h1>All Posts</h1>
+
+<form action="{% url 'main-page' %}" method="get">
+    {{ filter_form.as_p }}
+    <input type="submit" value="Filter">
+</form>
+
+{% if posts %}
+    {% for post in posts %}
+        <article>
+            <h2>{{ post.title }}</h2>
+
+            <a href="{% url 'user-profile' post.user.username %}">
+                {{ post.user.username }}
+            </a>
+
+            <p>{{ post.category.name }}</p>
+
+            {% if post.image %}
+                <img
+                    src="{{ post.image.url }}"
+                    alt="{{ post.title }}"
+                    width="300"
+                >
+            {% endif %}
+
+            <p>{{ post.description }}</p>
+        </article>
+    {% endfor %}
+{% else %}
+    <p>No posts found.</p>
+{% endif %}
+{% endblock %}

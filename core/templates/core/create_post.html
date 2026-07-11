@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+Create Post - ArtsyGram
+{% endblock %}
+
+{% block content %}
+<h1>Create Post</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <input type="submit" value="Create Post">
+</form>
+{% endblock %}
