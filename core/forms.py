@@ -4,17 +4,30 @@ from .models import Category
 
 
 class CategoryFilterForm(forms.Form):
-    category = forms.ChoiceField(
-        label="Category",
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
         required=False,
+        empty_label="All categories",
+        label="Category",
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-        choices = [("", "All categories")]
+class PostForm(forms.Form):
+    title = forms.CharField(
+        label="Title",
+        max_length=150,
+    )
 
-        for category in Category.objects.all():
-            choices.append((str(category.id), category.name))
+    image = forms.ImageField(
+        label="Image",
+    )
 
-        self.fields["category"].choices = choices
+    description = forms.CharField(
+        label="Description",
+        widget=forms.Textarea,
+    )
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        label="Category",
+    )
