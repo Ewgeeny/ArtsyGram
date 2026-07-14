@@ -5,15 +5,22 @@
     <title>{% block title %}ArtsyGram{% endblock %}</title>
 </head>
 <body>
+    <h1>ArtsyGram</h1>
+
     {% if user.is_authenticated %}
         <nav>
-            <a href="{% url 'main-page' %}">All Posts</a>
+            <a href="{% url 'main-page' %}"
+               {% if request.path == '/main/' %}style="font-weight: bold"{% endif %}>
+                All Posts
+            </a>
 
-            <a href="{% url 'user-profile' user.username %}">
+            <a href="{% url 'user-profile' user.username %}"
+               {% if '/profile/' in request.path %}style="font-weight: bold"{% endif %}>
                 My Profile
             </a>
 
-            <a href="{% url 'create-post' %}">
+            <a href="{% url 'create-post' %}"
+               {% if '/posts/create/' in request.path %}style="font-weight: bold"{% endif %}>
                 Create Post
             </a>
 

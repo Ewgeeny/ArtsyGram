@@ -36,6 +36,12 @@
             <p>{{ post.description }}</p>
 
             {% if is_own_profile %}
+                <form action="{% url 'edit-post' post.id %}" method="get">
+                    <button type="submit">
+                        Edit Post
+                    </button>
+                </form>
+
                 <form
                     action="{% url 'delete-post' post.id %}"
                     method="post"

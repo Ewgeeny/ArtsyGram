@@ -4,13 +4,6 @@ from .models import Category
 
 
 class CategoryFilterForm(forms.Form):
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        required=False,
-        empty_label="All categories",
-        label="Category",
-    )
-
     tags = forms.CharField(
         required=False,
         label="Tag",
@@ -36,6 +29,29 @@ class PostForm(forms.Form):
 
     image = forms.ImageField(
         label="Image",
+    )
+
+    description = forms.CharField(
+        label="Description",
+        widget=forms.Textarea,
+    )
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        label="Category",
+    )
+
+    tags = forms.CharField(
+        label="Tags",
+        required=False,
+        help_text="Separate tags with spaces",
+    )
+
+
+class EditPostForm(forms.Form):
+    title = forms.CharField(
+        label="Title",
+        max_length=150,
     )
 
     description = forms.CharField(

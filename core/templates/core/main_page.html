@@ -7,7 +7,23 @@ All Posts - ArtsyGram
 {% block content %}
 <h1>All Posts</h1>
 
+<div>
+    <a href="{% url 'main-page' %}"
+       {% if not selected_category %}style="font-weight: bold"{% endif %}>
+        All
+    </a>
+    {% for category in categories %}
+        <a href="{% url 'main-page' %}?category={{ category.id }}{% if request.GET.tags %}&tags={{ request.GET.tags }}{% endif %}"
+           {% if selected_category == category.id|slugify %}style="font-weight: bold"{% endif %}>
+            {{ category.name }}
+        </a>
+    {% endfor %}
+</div>
+
 <form action="{% url 'main-page' %}" method="get">
+    {% if selected_category %}
+        <input type="hidden" name="category" value="{{ selected_category }}">
+    {% endif %}
     {{ filter_form.as_p }}
     <input type="submit" value="Filter">
 </form>
@@ -33,6 +49,15 @@ All Posts - ArtsyGram
 
             <p>{{ post.description }}</p>
 
+            {% if post.tags.all %}
+    <p>
+        {% for tag in post.tags.all %}
+            <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
+
+            {% if post.user != request.user %}
             <form
                 action="{% url 'toggle-favorite' post.id %}"
                 method="post"
@@ -42,14 +67,25 @@ All Posts - ArtsyGram
                     {% if post.id in favorite_ids %}Remove from Favorites{% else %}Add to Favorites{% endif %}
                 </button>
             </form>
+            {% endif %}
 
-            {% if post.tags.all %}
-    <p>
-        {% for tag in post.tags.all %}
-            <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
-        {% endfor %}
-    </p>
-{% endif %}
+            {% if post.user == request.user %}
+                <form action="{% url 'edit-post' post.id %}" method="get">
+                    <button type="submit">
+                        Edit Post
+                    </button>
+                </form>
+
+                <form
+                    action="{% url 'delete-post' post.id %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+                    <button type="submit">
+                        Delete Post
+                    </button>
+                </form>
+            {% endif %}
         </article>
     {% endfor %}
 {% else %}

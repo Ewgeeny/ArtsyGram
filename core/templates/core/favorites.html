@@ -47,6 +47,24 @@ My Favorites - ArtsyGram
                     Remove from Favorites
                 </button>
             </form>
+
+            {% if favorite.post.user == request.user %}
+                <form action="{% url 'edit-post' favorite.post.id %}" method="get">
+                    <button type="submit">
+                        Edit Post
+                    </button>
+                </form>
+
+                <form
+                    action="{% url 'delete-post' favorite.post.id %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+                    <button type="submit">
+                        Delete Post
+                    </button>
+                </form>
+            {% endif %}
         </article>
     {% endfor %}
 {% else %}

@@ -6,8 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from .forms import CategoryFilterForm, PostForm
-from .models import Favorite, Post, Tag
+from .forms import CategoryFilterForm, EditPostForm, PostForm
+from .models import Category, Favorite, Post, Tag
 from .services import toggle_favorite
 
 
@@ -49,13 +49,14 @@ def welcome(request):
 def main_page(request):
     posts = Post.objects.order_by("-upload_date")
     filter_form = CategoryFilterForm(request.GET)
+    categories = Category.objects.all()
+
+    category_id = request.GET.get("category")
+    if category_id:
+        posts = posts.filter(category_id=category_id)
 
     if filter_form.is_valid():
-        category = filter_form.cleaned_data["category"]
         tags_input = filter_form.cleaned_data["tags"]
-
-        if category:
-            posts = posts.filter(category=category)
 
         if tags_input:
             posts = posts.filter(tags__name=tags_input)
@@ -67,6 +68,8 @@ def main_page(request):
     context = {
         "posts": posts,
         "filter_form": filter_form,
+        "categories": categories,
+        "selected_category": category_id,
         "favorite_ids": favorite_ids,
     }
 
@@ -177,6 +180,64 @@ def delete_post(request, post_id):
     return redirect(
         "user-profile",
         username=request.user.username,
+    )
+
+
+@login_required
+def edit_post(request, post_id):
+    posts = Post.objects.filter(id=post_id, user=request.user)
+
+    if not posts.exists():
+        return redirect("user-profile", username=request.user.username)
+
+    post = posts[0]
+
+    if request.method == "POST":
+        form = EditPostForm(request.POST)
+
+        if form.is_valid():
+            post.title = form.cleaned_data["title"]
+            post.description = form.cleaned_data["description"]
+            post.category = form.cleaned_data["category"]
+            post.save()
+
+            post.tags.clear()
+
+            tags = form.cleaned_data["tags"].split()
+
+            for tag in tags:
+                tag_name = tag.lstrip("#").lower()
+
+                if tag_name:
+                    existing_tags = Tag.objects.filter(name=tag_name)
+
+                    if len(existing_tags) == 0:
+                        tag = Tag.objects.create(name=tag_name)
+                    else:
+                        tag = existing_tags[0]
+
+                    post.tags.add(tag)
+
+            return redirect(
+                "user-profile",
+                username=request.user.username,
+            )
+    else:
+        form = EditPostForm(
+            initial={
+                "title": post.title,
+                "description": post.description,
+                "category": post.category,
+                "tags": " ".join(
+                    [f"#{t.name}" for t in post.tags.all()]
+                ),
+            }
+        )
+
+    return render(
+        request,
+        "core/edit_post.html",
+        {"form": form, "post": post},
     )
 
 

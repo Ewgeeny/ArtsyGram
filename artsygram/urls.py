@@ -53,6 +53,12 @@ urlpatterns = [
     ),
 
     path(
+        "posts/<int:post_id>/edit/",
+        views.edit_post,
+        name="edit-post",
+    ),
+
+    path(
         "posts/<int:post_id>/favorite/",
         views.toggle_favorite_view,
         name="toggle-favorite",
