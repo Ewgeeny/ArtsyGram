@@ -9,20 +9,32 @@
 
     <p>Discover and share creative inspiration.</p>
 
-    {% if form.errors %}
-        <p>Username or password is incorrect.</p>
-    {% endif %}
+    <section>
+        <h2>Log In</h2>
 
-    <form method="post">
-        {% csrf_token %}
+        <form method="post">
+            {% csrf_token %}
 
-        {{ form.as_p }}
+            {{ login_form.as_p }}
 
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
-        {% endif %}
+            <button type="submit" name="login_submit">
+                Log In
+            </button>
+        </form>
+    </section>
 
-        <input type="submit" value="Log In">
-    </form>
+    <section>
+        <h2>Create Account</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ register_form.as_p }}
+
+            <button type="submit" name="register_submit">
+                Register
+            </button>
+        </form>
+    </section>
 </body>
 </html>

@@ -1,11 +1,47 @@
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from .forms import CategoryFilterForm, PostForm
-from .models import Category, Post
+from .models import Post
+
+
+def welcome(request):
+    if request.user.is_authenticated:
+        return redirect("main-page")
+
+    login_form = AuthenticationForm(request)
+    register_form = UserCreationForm()
+
+    if request.method == "POST":
+        if "login_submit" in request.POST:
+            login_form = AuthenticationForm(
+                request,
+                data=request.POST,
+            )
+
+            if login_form.is_valid():
+                login(request, login_form.get_user())
+                return redirect("main-page")
+
+        elif "register_submit" in request.POST:
+            register_form = UserCreationForm(request.POST)
+
+            if register_form.is_valid():
+                new_user = register_form.save()
+                login(request, new_user)
+                return redirect("main-page")
+
+    context = {
+        "login_form": login_form,
+        "register_form": register_form,
+    }
+
+    return render(request, "core/welcome.html", context)
 
 
 @login_required
@@ -14,10 +50,10 @@ def main_page(request):
     filter_form = CategoryFilterForm(request.GET)
 
     if filter_form.is_valid():
-        category_name = filter_form.cleaned_data["category"]
+        category = filter_form.cleaned_data["category"]
 
-        if category_name:
-            posts = posts.filter(category__name=category_name)
+        if category:
+            posts = posts.filter(category=category)
 
     context = {
         "posts": posts,
@@ -35,7 +71,10 @@ def user_profile(request, username):
         return HttpResponse("User not found.", status=404)
 
     profile_user = users[0]
-    posts = Post.objects.filter(user=profile_user).order_by("-upload_date")
+
+    posts = Post.objects.filter(
+        user=profile_user
+    ).order_by("-upload_date")
 
     context = {
         "profile_user": profile_user,
@@ -52,14 +91,12 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
-            category = Category.objects.filter(name=form.cleaned_data["category"]).get()
-
             Post.objects.create(
                 user=request.user,
                 title=form.cleaned_data["title"],
                 image=request.FILES["image"],
                 description=form.cleaned_data["description"],
-                category=category,
+                category=form.cleaned_data["category"],
                 upload_date=timezone.now(),
             )
 
