@@ -43,6 +43,14 @@
                 </form>
             {% endif %}
         </article>
+
+        {% if post.tags.all %}
+    <p>
+        {% for tag in post.tags.all %}
+            <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
     {% endfor %}
 {% else %}
     <p>This user has not posted anything yet.</p>

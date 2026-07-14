@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from .forms import CategoryFilterForm, PostForm
-from .models import Post
+from .models import Post, Tag
 
 
 def welcome(request):
@@ -51,9 +51,13 @@ def main_page(request):
 
     if filter_form.is_valid():
         category = filter_form.cleaned_data["category"]
+        tags_input = filter_form.cleaned_data["tags"]
 
         if category:
             posts = posts.filter(category=category)
+
+        if tags_input:
+            posts = posts.filter(tags__name=tags_input)
 
     context = {
         "posts": posts,
@@ -91,7 +95,7 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
-            Post.objects.create(
+            post = Post.objects.create(
                 user=request.user,
                 title=form.cleaned_data["title"],
                 image=request.FILES["image"],
@@ -99,6 +103,21 @@ def create_post(request):
                 category=form.cleaned_data["category"],
                 upload_date=timezone.now(),
             )
+
+            tags = form.cleaned_data["tags"].split()
+
+            for tag in tags:
+                tag_name = tag.lstrip("#").lower()
+
+                if tag_name:
+                    existing_tags = Tag.objects.filter(name=tag_name)
+
+                    if len(existing_tags) == 0:
+                        tag = Tag.objects.create(name=tag_name)
+                    else:
+                        tag = existing_tags[0]
+
+                    post.tags.add(tag)
 
             return redirect(
                 "user-profile",

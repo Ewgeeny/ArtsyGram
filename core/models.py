@@ -22,7 +22,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to="posts")
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
     upload_date = models.DateTimeField()
 
     def __str__(self) -> str:

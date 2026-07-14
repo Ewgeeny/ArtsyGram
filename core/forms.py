@@ -11,6 +11,22 @@ class CategoryFilterForm(forms.Form):
         label="Category",
     )
 
+    tags = forms.CharField(
+        required=False,
+        label="Tag",
+        widget=forms.TextInput(
+            attrs={
+                "onkeydown": "if(event.key===' '){event.preventDefault()}"
+            }
+        ),
+    )
+
+    def clean_tags(self):
+        value = self.cleaned_data.get("tags", "")
+        if " " in value:
+            raise forms.ValidationError("Enter only one tag without spaces.")
+        return value.strip().lstrip("#").lower()
+
 
 class PostForm(forms.Form):
     title = forms.CharField(
@@ -30,4 +46,10 @@ class PostForm(forms.Form):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         label="Category",
+    )
+
+    tags = forms.CharField(
+        label="Tags",
+        required=False,
+        help_text="Separate tags with spaces",
     )
