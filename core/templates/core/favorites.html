@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+My Favorites - ArtsyGram
+{% endblock %}
+
+{% block content %}
+<h1>My Favorites</h1>
+
+<a href="{% url 'user-profile' profile_user.username %}">
+    Back to Profile
+</a>
+
+{% if favorites %}
+    {% for favorite in favorites %}
+        <article>
+            <h2>{{ favorite.post.title }}</h2>
+
+            <a href="{% url 'user-profile' favorite.post.user.username %}">
+                {{ favorite.post.user.username }}
+            </a>
+
+            {% if favorite.post.image %}
+                <img
+                    src="{{ favorite.post.image.url }}"
+                    alt="{{ favorite.post.title }}"
+                    width="300"
+                >
+            {% endif %}
+
+            <p>{{ favorite.post.description }}</p>
+
+            {% if favorite.post.tags.all %}
+                <p>
+                    {% for tag in favorite.post.tags.all %}
+                        <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            <form
+                action="{% url 'toggle-favorite' favorite.post.id %}"
+                method="post"
+            >
+                {% csrf_token %}
+                <button type="submit">
+                    Remove from Favorites
+                </button>
+            </form>
+        </article>
+    {% endfor %}
+{% else %}
+    <p>No favorites yet.</p>
+{% endif %}
+{% endblock %}

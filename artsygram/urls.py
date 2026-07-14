@@ -35,6 +35,12 @@ urlpatterns = [
     ),
 
     path(
+        "profile/<str:username>/favorites/",
+        views.user_favorites,
+        name="user-favorites",
+    ),
+
+    path(
         "posts/create/",
         views.create_post,
         name="create-post",
@@ -44,6 +50,12 @@ urlpatterns = [
         "posts/<int:post_id>/delete/",
         views.delete_post,
         name="delete-post",
+    ),
+
+    path(
+        "posts/<int:post_id>/favorite/",
+        views.toggle_favorite_view,
+        name="toggle-favorite",
     ),
 ] + static(
     settings.MEDIA_URL,

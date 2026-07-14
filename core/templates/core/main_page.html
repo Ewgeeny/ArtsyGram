@@ -33,6 +33,16 @@ All Posts - ArtsyGram
 
             <p>{{ post.description }}</p>
 
+            <form
+                action="{% url 'toggle-favorite' post.id %}"
+                method="post"
+            >
+                {% csrf_token %}
+                <button type="submit">
+                    {% if post.id in favorite_ids %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                </button>
+            </form>
+
             {% if post.tags.all %}
     <p>
         {% for tag in post.tags.all %}

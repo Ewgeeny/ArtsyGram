@@ -76,28 +76,5 @@ class Migration(migrations.Migration):
                 ("tags", models.ManyToManyField(to="core.tag")),
             ],
         ),
-        migrations.CreateModel(
-            name="Collection",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("name", models.CharField(max_length=100)),
-                ("creation_date", models.DateTimeField()),
-                (
-                    "user",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to=settings.AUTH_USER_MODEL,
-                    ),
-                ),
-                ("posts", models.ManyToManyField(to="core.post")),
-            ],
-        ),
+
     ]

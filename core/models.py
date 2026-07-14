@@ -29,11 +29,14 @@ class Post(models.Model):
         return self.title
 
 
-class Collection(models.Model):
+class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    posts = models.ManyToManyField(Post)
-    creation_date = models.DateTimeField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    saved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "post")
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.user.username} - {self.post.title}"
+

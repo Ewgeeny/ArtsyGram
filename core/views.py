@@ -7,7 +7,8 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from .forms import CategoryFilterForm, PostForm
-from .models import Post, Tag
+from .models import Favorite, Post, Tag
+from .services import toggle_favorite
 
 
 def welcome(request):
@@ -59,9 +60,14 @@ def main_page(request):
         if tags_input:
             posts = posts.filter(tags__name=tags_input)
 
+    favorite_ids = Favorite.objects.filter(
+        user=request.user
+    ).values_list("post_id", flat=True)
+
     context = {
         "posts": posts,
         "filter_form": filter_form,
+        "favorite_ids": favorite_ids,
     }
 
     return render(request, "core/main_page.html", context)
@@ -87,6 +93,30 @@ def user_profile(request, username):
     }
 
     return render(request, "core/user_profile.html", context)
+
+
+@login_required
+def user_favorites(request, username):
+    users = User.objects.filter(username=username)
+
+    if len(users) == 0:
+        return HttpResponse("User not found.", status=404)
+
+    profile_user = users[0]
+
+    if request.user != profile_user:
+        return HttpResponse("Not authorized.", status=403)
+
+    favorites = Favorite.objects.filter(
+        user=request.user
+    ).select_related("post").order_by("-saved_at")
+
+    context = {
+        "profile_user": profile_user,
+        "favorites": favorites,
+    }
+
+    return render(request, "core/favorites.html", context)
 
 
 @login_required
@@ -148,3 +178,17 @@ def delete_post(request, post_id):
         "user-profile",
         username=request.user.username,
     )
+
+
+@login_required
+def toggle_favorite_view(request, post_id):
+    if request.method == "POST":
+        posts = Post.objects.filter(id=post_id)
+
+        if posts.exists():
+            toggle_favorite(request.user, posts[0])
+
+    referer = request.META.get("HTTP_REFERER")
+    if referer:
+        return redirect(referer)
+    return redirect("main-page")

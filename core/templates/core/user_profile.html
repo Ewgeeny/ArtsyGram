@@ -13,6 +13,10 @@
     <a href="{% url 'create-post' %}">
         Add Post
     </a>
+
+    <a href="{% url 'user-favorites' profile_user.username %}">
+        My Favorites
+    </a>
 {% endif %}
 
 {% if posts %}
