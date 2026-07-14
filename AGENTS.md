@@ -4,13 +4,17 @@
 
 This is a Django app for sharing and managing creative inspiration through image-based posts.
 
-Main apps:
+Main app:
 
-- `apps/accounts` — user registration, login and profiles
-- `apps/posts` — image posts and post management
-- `apps/search` — searching and filtering posts
-- `apps/collections` — saved inspiration boards (optional)
-- `apps/web` — server-rendered user interface
+- `core` — models, views, forms, templates and services for the entire application
+
+Key features:
+
+- User registration, login and profiles
+- Image posts with categories and tags
+- Tag-based filtering on the main page
+- Private favorites list (add/remove posts, view on profile)
+- Edit and delete posts (own posts only)
 
 ## Important project conventions
 
@@ -32,6 +36,7 @@ Main apps:
 - Image uploads
 - Search and filtering
 - Relationships between posts, tags and categories
+- Favorites (unique constraint per user/post)
 
 ## Change coupling
 
@@ -40,7 +45,7 @@ If you change:
 - a model → also check forms, admin and related views
 - authentication → also check permissions and user profiles
 - categories or tags → also check search and filtering
-- collections → also check saved posts
+- favorites → also check profile view and toggle endpoint
 
 ## Constraints
 
@@ -63,3 +68,4 @@ Add or update tests for:
 - image uploads
 - search functionality
 - CRUD operations for posts
+- favorites toggle logic

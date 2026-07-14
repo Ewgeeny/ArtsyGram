@@ -1,27 +1,27 @@
-## 1. Collections entfernen
+## 1. Remove Collections
 
-- [x] 1.1 Collection-Modell und Admin-Registrierung entfernen
-- [x] 1.2 Vorhandene Collection-Migration bereinigen oder neue Entfernungsmigration anlegen
+- [x] 1.1 Remove collection model and admin registration
+- [x] 1.2 Clean up existing collection migration or create new removal migration
 
-## 2. Favoriten-Modell einführen
+## 2. Introduce Favorites Model
 
-- [x] 2.1 Neues `Favorite`-Modell mit `user`, `post` und `saved_at` erstellen
-- [x] 2.2 Eindeutige Relation `unique_together` für User/Post setzen
-- [x] 2.3 Migration für das neue Modell erzeugen und anwenden
+- [x] 2.1 Create new `Favorite` model with `user`, `post`, and `saved_at`
+- [x] 2.2 Set unique constraint `unique_together` for user/post
+- [x] 2.3 Generate and apply migration for new model
 
-## 3. Logik und Endpunkte
+## 3. Logic and Endpoints
 
-- [x] 3.1 Toggle-Logik zum Hinzufügen/Entfernen von Favoriten bereitstellen
-- [x] 3.2 POST-Endpunkt für das Umschalten eines Favoriten einrichten
-- [x] 3.3 GET-Endpunkt für die Profil-Ansicht der Favoritenliste sicherstellen
+- [x] 3.1 Provide toggle logic for adding/removing favorites
+- [x] 3.2 Set up POST endpoint for toggling a favorite
+- [x] 3.3 Ensure GET endpoint for profile favorites view
 
-## 4. UI und Sortierung
+## 4. UI and Sorting
 
-- [x] 4.1 Profilansicht um private Favoritenliste ergänzen
-- [x] 4.2 Sortierung nach `-saved_at` realisieren
-- [x] 4.3 Favoriten-Button/-Aktion für Posts sichtbar machen
+- [x] 4.1 Add private favorites list to profile view
+- [x] 4.2 Implement sorting by `-saved_at`
+- [x] 4.3 Make favorite button/action visible on posts
 
-## 5. Prüfung
+## 5. Verification
 
-- [x] 5.1 Bestehende Tests aktualisieren oder ergänzen
-- [x] 5.2 Migration und App-Laufzeit prüfen
+- [x] 5.1 Update or add existing tests
+- [x] 5.2 Check migration and app runtime

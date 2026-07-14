@@ -1,15 +1,15 @@
 ## ADDED Requirements
 
 ### Requirement: Remove collections feature
-Das System SHALL die bisherige Collection-Funktionalität vollständig entfernen.
+The system SHALL completely remove existing collection functionality.
 
 #### Scenario: No collection UI or logic remains
-- **WHEN** die App genutzt wird
-- **THEN** gibt es keine Collections-Mehr, keine zugehörigen Routes, Views oder Modelle mehr
+- **WHEN** the app is used
+- **THEN** there are no more collections, no related routes, views, or models
 
 ### Requirement: Clean up migration history
-Das System SHALL die bisherige Collection-Migration und Modeldefinition sicher entfernen.
+The system SHALL safely remove existing collection migration and model definition.
 
 #### Scenario: Migration state is consistent
-- **WHEN** die Datenbank nach der Änderung geprüft wird
-- **THEN** existiert kein Collection-Modell mehr und es gibt inkonsistente Migrationen nicht
+- **WHEN** the database is checked after the change
+- **THEN** no collection model exists and there are no inconsistent migrations

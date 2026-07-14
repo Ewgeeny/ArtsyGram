@@ -1,29 +1,29 @@
 ## ADDED Requirements
 
 ### Requirement: User can save post to private favorites
-Das System SHALL es Nutzer*innen erlauben, einen Post zur eigenen Favoritenliste hinzuzufügen.
+The system SHALL allow users to add a post to their private favorites list.
 
 #### Scenario: Save a post as favorite
-- **WHEN** eine Nutzerin/ein Nutzer einen Post als Favorit markiert
-- **THEN** wird der Post in dessen private Favoritenliste übernommen
+- **WHEN** a user marks a post as favorite
+- **THEN** the post is added to their private favorites list
 
 ### Requirement: User can remove post from private favorites
-Das System SHALL es Nutzer*innen erlauben, einen Post aus der eigenen Favoritenliste zu entfernen.
+The system SHALL allow users to remove a post from their private favorites list.
 
 #### Scenario: Remove a post from favorites
-- **WHEN** eine Nutzerin/ein Nutzer einen Favoriten entfernt
-- **THEN** wird der Post aus dessen Favoritenliste gelöscht
+- **WHEN** a user removes a favorite
+- **THEN** the post is deleted from their favorites list
 
 ### Requirement: Profile shows own favorites sorted by newest saved first
-Das System SHALL die eigene Favoritenliste im Profil sortiert nach Speicherzeit anzeigen, zuletzt gespeichert zuerst.
+The system SHALL display the user's own favorites list on the profile sorted by save time, most recently saved first.
 
 #### Scenario: Favorites order on profile
-- **WHEN** die Profilseite mit Favoriten aufgerufen wird
-- **THEN** werden die Einträge in der Reihenfolge neueste Speicherzeit zuerst angezeigt
+- **WHEN** the profile page with favorites is loaded
+- **THEN** entries are displayed in order of newest save time first
 
 ### Requirement: Favorites list is private
-Das System SHALL die Favoritenliste nur für die eigene Nutzerin/den eigenen Nutzer sichtbar machen.
+The system SHALL make the favorites list visible only to the user themselves.
 
 #### Scenario: Other users cannot view favorites
-- **WHEN** eine fremde Nutzerin/ein fremder Nutzer das Profil aufruft
-- **THEN** werden keine Favoriten angezeigt
+- **WHEN** another user views the profile
+- **THEN** no favorites are displayed
