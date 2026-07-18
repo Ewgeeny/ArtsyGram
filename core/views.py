@@ -244,10 +244,24 @@ def edit_post(request, post_id):
 @login_required
 def toggle_favorite_view(request, post_id):
     if request.method == "POST":
-        posts = Post.objects.filter(id=post_id)
+        post = Post.objects.filter(id=post_id).first()
 
-        if posts.exists():
-            toggle_favorite(request.user, posts[0])
+        if post:
+            toggle_favorite(request.user, post)
+
+            if request.headers.get("HX-Request"):
+                if "favorites" in request.path:
+                    return HttpResponse("")
+
+                favorite_ids = Favorite.objects.filter(
+                    user=request.user
+                ).values_list("post_id", flat=True)
+
+                return render(
+                    request,
+                    "core/favorite_button.html",
+                    {"post": post, "favorite_ids": favorite_ids},
+                )
 
     referer = request.META.get("HTTP_REFERER")
     if referer:

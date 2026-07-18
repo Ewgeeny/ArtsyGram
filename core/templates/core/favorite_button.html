@@ -1,0 +1,7 @@
+<button
+    hx-post="{% url 'toggle-favorite' post.id %}"
+    hx-target="this"
+    hx-swap="outerHTML"
+    class="btn {% if post.id in favorite_ids %}btn-favorited{% endif %}">
+    {% if post.id in favorite_ids %}&#9829; Favorited{% else %}&#9825; Favorite{% endif %}
+</button>

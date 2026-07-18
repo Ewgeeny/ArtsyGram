@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ArtsyGram{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script>
+        document.addEventListener('htmx:configRequest', (event) => {
+            const token = document.cookie.match(/csrftoken=([^;]+)/);
+            if (token) {
+                event.detail.headers['X-CSRFToken'] = token[1];
+            }
+        });
+    </script>
 </head>
 <body>
     <header class="site-header">

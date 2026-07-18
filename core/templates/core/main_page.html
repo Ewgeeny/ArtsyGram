@@ -65,16 +65,7 @@ All Posts - ArtsyGram
 
                     <div class="post-card-actions">
                         {% if post.user != request.user %}
-                            <form
-                                action="{% url 'toggle-favorite' post.id %}"
-                                method="post"
-                            >
-                                {% csrf_token %}
-                                <button type="submit"
-                                    class="btn {% if post.id in favorite_ids %}btn-favorited{% endif %}">
-                                    {% if post.id in favorite_ids %}&#9829; Favorited{% else %}&#9825; Favorite{% endif %}
-                                </button>
-                            </form>
+                            {% include "core/favorite_button.html" with post=post favorite_ids=favorite_ids %}
                         {% endif %}
 
                         {% if post.user == request.user %}

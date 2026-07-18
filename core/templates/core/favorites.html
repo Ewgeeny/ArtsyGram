@@ -42,15 +42,14 @@ My Favorites - ArtsyGram
                     {% endif %}
 
                     <div class="post-card-actions">
-                        <form
-                            action="{% url 'toggle-favorite' favorite.post.id %}"
-                            method="post"
-                        >
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                &#10005; Remove
-                            </button>
-                        </form>
+                        <button
+                            hx-post="{% url 'toggle-favorite' favorite.post.id %}"
+                            hx-target="closest article"
+                            hx-swap="outerHTML"
+                            hx-confirm="Remove from favorites?"
+                            class="btn btn-danger">
+                            &#10005; Remove
+                        </button>
 
                         {% if favorite.post.user == request.user %}
                             <form action="{% url 'edit-post' favorite.post.id %}" method="get">
