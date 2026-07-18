@@ -5,22 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to ArtsyGram</title>
-    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}?v=3">
 </head>
 <body>
     <div class="welcome-page">
         <div class="welcome-container">
+
             <div class="welcome-brand">
                 <h1>ArtsyGram</h1>
                 <p>Discover and share creative inspiration.</p>
             </div>
 
             <div>
+
                 <div class="auth-card">
                     <h2>Log In</h2>
+
                     <form method="post">
                         {% csrf_token %}
                         {{ login_form.as_p }}
+
                         <button type="submit" name="login_submit">
                             Log In
                         </button>
@@ -29,15 +33,42 @@
 
                 <div class="auth-card">
                     <h2>Create Account</h2>
+
                     <form method="post">
                         {% csrf_token %}
-                        {{ register_form.as_p }}
+
+                        {% for field in register_form %}
+                            <div class="form-field">
+
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="helptext-inline">
+                                        {{ field.help_text|safe }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <span class="field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+                        {% endfor %}
+
                         <button type="submit" name="register_submit">
                             Register
                         </button>
                     </form>
                 </div>
+
             </div>
+
         </div>
     </div>
 </body>

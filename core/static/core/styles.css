@@ -208,6 +208,44 @@ main {
     border-color: var(--color-text-muted);
 }
 
+.helptext-inline {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+.auth-card form .form-field {
+    margin-bottom: 12px;
+}
+
+.helptext-inline {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+.helptext-inline ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.helptext-inline li {
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+.field-error {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-danger);
+    margin-top: 2px;
+}
+
 .auth-card button[type="submit"] {
     width: 100%;
     padding: 10px;
