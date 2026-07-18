@@ -1,0 +1,691 @@
+:root {
+    --color-bg: #fafafa;
+    --color-surface: #ffffff;
+    --color-primary: #e1306c;
+    --color-primary-hover: #c91358;
+    --color-text: #262626;
+    --color-text-muted: #8e8e8e;
+    --color-border: #dbdbdb;
+    --color-tag: #262626;
+    --color-tag-bg: #efefef;
+    --color-danger: #ed4956;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --max-width: 935px;
+    --transition: 0.2s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-primary);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ── Header ─────────────────────────────────────── */
+
+.site-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ── Navigation ─────────────────────────────────── */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.main-nav a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-text);
+}
+
+.nav-logout-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.nav-logout-btn:hover {
+    background: var(--color-text);
+    color: #fff;
+    border-color: var(--color-text);
+}
+
+/* ── Main Content ───────────────────────────────── */
+
+main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* ── Welcome / Login Page ───────────────────────── */
+
+.welcome-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.welcome-container {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.welcome-brand {
+    text-align: center;
+}
+
+.welcome-brand h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.welcome-brand p {
+    color: var(--color-text-muted);
+}
+
+.auth-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 40px;
+    width: 350px;
+}
+
+.auth-card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-card + .auth-card {
+    margin-top: 12px;
+}
+
+.auth-card form p {
+    margin-bottom: 12px;
+}
+
+.auth-card form label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.auth-card form input[type="text"],
+.auth-card form input[type="password"],
+.auth-card form input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    background: var(--color-bg);
+    transition: border-color var(--transition);
+}
+
+.auth-card form input:focus {
+    outline: none;
+    border-color: var(--color-text-muted);
+}
+
+.auth-card button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+    margin-top: 8px;
+}
+
+.auth-card button[type="submit"]:hover {
+    background: var(--color-primary-hover);
+}
+
+/* ── Page Headers ───────────────────────────────── */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.page-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* ── Category Filter Bar ────────────────────────── */
+
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.filter-bar a,
+.filter-bar button {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-decoration: none;
+}
+
+.filter-bar a:hover,
+.filter-bar button:hover {
+    background: var(--color-bg);
+}
+
+.filter-bar a.active,
+.filter-bar button.active {
+    background: var(--color-text);
+    color: #fff;
+    border-color: var(--color-text);
+}
+
+/* ── Tag Search Form ────────────────────────────── */
+
+.search-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.search-form p {
+    margin: 0;
+}
+
+.search-form label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.search-form input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    background: var(--color-surface);
+    transition: border-color var(--transition);
+}
+
+.search-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-text-muted);
+}
+
+.search-form input[type="submit"] {
+    padding: 8px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.search-form input[type="submit"]:hover {
+    background: var(--color-primary-hover);
+}
+
+/* ── Post Grid (Pinterest / Masonry-style) ──────── */
+
+.post-grid {
+    columns: 3;
+    column-gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .post-grid {
+        columns: 2;
+    }
+}
+
+@media (max-width: 550px) {
+    .post-grid {
+        columns: 1;
+    }
+}
+
+/* ── Post Card ──────────────────────────────────── */
+
+.post-card {
+    break-inside: avoid;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.post-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.post-card-image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.post-card-body {
+    padding: 14px 16px;
+}
+
+.post-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.post-card-user {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.post-card-user:hover {
+    color: var(--color-text);
+}
+
+.post-card-category {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: rgba(225, 48, 108, 0.08);
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+}
+
+.post-card-desc {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* ── Tags ───────────────────────────────────────── */
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.tag-list a {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-tag);
+    background: var(--color-tag-bg);
+    padding: 3px 10px;
+    border-radius: 20px;
+    transition: background var(--transition), color var(--transition);
+}
+
+.tag-list a:hover {
+    background: var(--color-text);
+    color: #fff;
+}
+
+/* ── Card Actions ───────────────────────────────── */
+
+.post-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+}
+
+.post-card-actions form {
+    margin: 0;
+}
+
+/* ── Buttons ────────────────────────────────────── */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
+}
+
+.btn-danger {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.btn-favorited {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.btn-favorited:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+}
+
+/* ── Profile Page ───────────────────────────────── */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.profile-info h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.profile-info p {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* ── Empty State ────────────────────────────────── */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--color-text-muted);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+}
+
+/* ── Forms (create / edit) ──────────────────────── */
+
+.form-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 30px;
+    max-width: 540px;
+}
+
+.form-card h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.form-card p {
+    margin-bottom: 16px;
+}
+
+.form-card label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-card input[type="text"],
+.form-card input[type="email"],
+.form-card input[type="password"],
+.form-card input[type="file"],
+.form-card textarea,
+.form-card select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: var(--color-bg);
+    transition: border-color var(--transition);
+}
+
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: var(--color-text-muted);
+}
+
+.form-card textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-card input[type="submit"] {
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition);
+    margin-top: 8px;
+}
+
+.form-card input[type="submit"]:hover {
+    background: var(--color-primary-hover);
+}
+
+.form-card .form-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.form-card .form-link:hover {
+    color: var(--color-text);
+}
+
+/* ── Utility ────────────────────────────────────── */
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mt-2 { margin-top: 16px; }
+
+/* ── Responsive ─────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .welcome-container {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .header-inner {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .main-nav {
+        gap: 14px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-actions {
+        justify-content: center;
+    }
+}

@@ -5,22 +5,24 @@ All Posts - ArtsyGram
 {% endblock %}
 
 {% block content %}
-<h1>All Posts</h1>
+<div class="page-header">
+    <h1>All Posts</h1>
+</div>
 
-<div>
+<div class="filter-bar">
     <a href="{% url 'main-page' %}"
-       {% if not selected_category %}style="font-weight: bold"{% endif %}>
+       class="{% if not selected_category %}active{% endif %}">
         All
     </a>
     {% for category in categories %}
         <a href="{% url 'main-page' %}?category={{ category.id }}{% if request.GET.tags %}&tags={{ request.GET.tags }}{% endif %}"
-           {% if selected_category == category.id|slugify %}style="font-weight: bold"{% endif %}>
+           class="{% if selected_category == category.id|slugify %}active{% endif %}">
             {{ category.name }}
         </a>
     {% endfor %}
 </div>
 
-<form action="{% url 'main-page' %}" method="get">
+<form action="{% url 'main-page' %}" method="get" class="search-form">
     {% if selected_category %}
         <input type="hidden" name="category" value="{{ selected_category }}">
     {% endif %}
@@ -29,66 +31,77 @@ All Posts - ArtsyGram
 </form>
 
 {% if posts %}
-    {% for post in posts %}
-        <article>
-            <h2>{{ post.title }}</h2>
+    <div class="post-grid">
+        {% for post in posts %}
+            <article class="post-card">
+                {% if post.image %}
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                        class="post-card-image"
+                    >
+                {% endif %}
 
-            <a href="{% url 'user-profile' post.user.username %}">
-                {{ post.user.username }}
-            </a>
+                <div class="post-card-body">
+                    <a href="{% url 'user-profile' post.user.username %}" class="post-card-user">
+                        {{ post.user.username }}
+                    </a>
 
-            <p>{{ post.category.name }}</p>
+                    <h2 class="post-card-title">{{ post.title }}</h2>
 
-            {% if post.image %}
-                <img
-                    src="{{ post.image.url }}"
-                    alt="{{ post.title }}"
-                    width="300"
-                >
-            {% endif %}
+                    {% if post.category %}
+                        <span class="post-card-category">{{ post.category.name }}</span>
+                    {% endif %}
 
-            <p>{{ post.description }}</p>
+                    <p class="post-card-desc">{{ post.description }}</p>
 
-            {% if post.tags.all %}
-    <p>
-        {% for tag in post.tags.all %}
-            <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                    {% if post.tags.all %}
+                        <div class="tag-list">
+                            {% for tag in post.tags.all %}
+                                <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="post-card-actions">
+                        {% if post.user != request.user %}
+                            <form
+                                action="{% url 'toggle-favorite' post.id %}"
+                                method="post"
+                            >
+                                {% csrf_token %}
+                                <button type="submit"
+                                    class="btn {% if post.id in favorite_ids %}btn-favorited{% endif %}">
+                                    {% if post.id in favorite_ids %}&#9829; Favorited{% else %}&#9825; Favorite{% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if post.user == request.user %}
+                            <form action="{% url 'edit-post' post.id %}" method="get">
+                                <button type="submit" class="btn btn-sm">
+                                    Edit
+                                </button>
+                            </form>
+
+                            <form
+                                action="{% url 'delete-post' post.id %}"
+                                method="post"
+                            >
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
         {% endfor %}
-    </p>
-{% endif %}
-
-            {% if post.user != request.user %}
-            <form
-                action="{% url 'toggle-favorite' post.id %}"
-                method="post"
-            >
-                {% csrf_token %}
-                <button type="submit">
-                    {% if post.id in favorite_ids %}Remove from Favorites{% else %}Add to Favorites{% endif %}
-                </button>
-            </form>
-            {% endif %}
-
-            {% if post.user == request.user %}
-                <form action="{% url 'edit-post' post.id %}" method="get">
-                    <button type="submit">
-                        Edit Post
-                    </button>
-                </form>
-
-                <form
-                    action="{% url 'delete-post' post.id %}"
-                    method="post"
-                >
-                    {% csrf_token %}
-                    <button type="submit">
-                        Delete Post
-                    </button>
-                </form>
-            {% endif %}
-        </article>
-    {% endfor %}
+    </div>
 {% else %}
-    <p>No posts found.</p>
+    <div class="empty-state">
+        <p>No posts found.</p>
+    </div>
 {% endif %}
 {% endblock %}

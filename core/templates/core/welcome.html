@@ -1,40 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to ArtsyGram</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
 </head>
 <body>
-    <h1>Welcome to ArtsyGram</h1>
+    <div class="welcome-page">
+        <div class="welcome-container">
+            <div class="welcome-brand">
+                <h1>ArtsyGram</h1>
+                <p>Discover and share creative inspiration.</p>
+            </div>
 
-    <p>Discover and share creative inspiration.</p>
+            <div>
+                <div class="auth-card">
+                    <h2>Log In</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ login_form.as_p }}
+                        <button type="submit" name="login_submit">
+                            Log In
+                        </button>
+                    </form>
+                </div>
 
-    <section>
-        <h2>Log In</h2>
-
-        <form method="post">
-            {% csrf_token %}
-
-            {{ login_form.as_p }}
-
-            <button type="submit" name="login_submit">
-                Log In
-            </button>
-        </form>
-    </section>
-
-    <section>
-        <h2>Create Account</h2>
-
-        <form method="post">
-            {% csrf_token %}
-
-            {{ register_form.as_p }}
-
-            <button type="submit" name="register_submit">
-                Register
-            </button>
-        </form>
-    </section>
+                <div class="auth-card">
+                    <h2>Create Account</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ register_form.as_p }}
+                        <button type="submit" name="register_submit">
+                            Register
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

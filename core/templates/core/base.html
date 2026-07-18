@@ -1,35 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ArtsyGram{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
 </head>
 <body>
-    <h1>ArtsyGram</h1>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="{% url 'main-page' %}" class="site-logo">ArtsyGram</a>
 
-    {% if user.is_authenticated %}
-        <nav>
-            <a href="{% url 'main-page' %}"
-               {% if request.path == '/main/' %}style="font-weight: bold"{% endif %}>
-                All Posts
-            </a>
+            {% if user.is_authenticated %}
+            <nav class="main-nav">
+                <a href="{% url 'main-page' %}"
+                   {% if request.path == '/main/' %}class="active"{% endif %}>
+                    All Posts
+                </a>
 
-            <a href="{% url 'user-profile' user.username %}"
-               {% if '/profile/' in request.path %}style="font-weight: bold"{% endif %}>
-                My Profile
-            </a>
+                <a href="{% url 'user-profile' user.username %}"
+                   {% if '/profile/' in request.path %}class="active"{% endif %}>
+                    My Profile
+                </a>
 
-            <a href="{% url 'create-post' %}"
-               {% if '/posts/create/' in request.path %}style="font-weight: bold"{% endif %}>
-                Create Post
-            </a>
+                <a href="{% url 'create-post' %}"
+                   {% if '/posts/create/' in request.path %}class="active"{% endif %}>
+                    Create Post
+                </a>
 
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Log Out</button>
-            </form>
-        </nav>
-    {% endif %}
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-logout-btn">Log Out</button>
+                </form>
+            </nav>
+            {% endif %}
+        </div>
+    </header>
 
     <main>
         {% block content %}

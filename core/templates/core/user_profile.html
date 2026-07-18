@@ -5,64 +5,81 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ profile_user.username }}</h1>
-
-{% if is_own_profile %}
-    <p>This is your profile.</p>
-
-    <a href="{% url 'create-post' %}">
-        Add Post
-    </a>
-
-    <a href="{% url 'user-favorites' profile_user.username %}">
-        My Favorites
-    </a>
-{% endif %}
+<div class="profile-header">
+    <div class="profile-avatar">
+        {{ profile_user.username|first|upper }}
+    </div>
+    <div class="profile-info">
+        <h1>{{ profile_user.username }}</h1>
+        {% if is_own_profile %}
+            <p>This is your profile.</p>
+            <div class="profile-actions">
+                <a href="{% url 'create-post' %}" class="btn btn-primary">
+                    + New Post
+                </a>
+                <a href="{% url 'user-favorites' profile_user.username %}" class="btn">
+                    &#9825; My Favorites
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 {% if posts %}
-    {% for post in posts %}
-        <article>
-            <h2>{{ post.title }}</h2>
+    <div class="post-grid">
+        {% for post in posts %}
+            <article class="post-card">
+                {% if post.image %}
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                        class="post-card-image"
+                    >
+                {% endif %}
 
-            {% if post.image %}
-                <img
-                    src="{{ post.image.url }}"
-                    alt="{{ post.title }}"
-                    width="300"
-                >
-            {% endif %}
+                <div class="post-card-body">
+                    <h2 class="post-card-title">{{ post.title }}</h2>
 
-            <p>{{ post.category.name }}</p>
-            <p>{{ post.description }}</p>
+                    {% if post.category %}
+                        <span class="post-card-category">{{ post.category.name }}</span>
+                    {% endif %}
 
-            {% if is_own_profile %}
-                <form action="{% url 'edit-post' post.id %}" method="get">
-                    <button type="submit">
-                        Edit Post
-                    </button>
-                </form>
+                    <p class="post-card-desc">{{ post.description }}</p>
 
-                <form
-                    action="{% url 'delete-post' post.id %}"
-                    method="post"
-                >
-                    {% csrf_token %}
-                    <button type="submit">
-                        Delete Post
-                    </button>
-                </form>
-            {% endif %}
-        </article>
+                    {% if post.tags.all %}
+                        <div class="tag-list">
+                            {% for tag in post.tags.all %}
+                                <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-        {% if post.tags.all %}
-    <p>
-        {% for tag in post.tags.all %}
-            <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                    {% if is_own_profile %}
+                        <div class="post-card-actions">
+                            <form action="{% url 'edit-post' post.id %}" method="get">
+                                <button type="submit" class="btn btn-sm">
+                                    Edit
+                                </button>
+                            </form>
+
+                            <form
+                                action="{% url 'delete-post' post.id %}"
+                                method="post"
+                            >
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
         {% endfor %}
-    </p>
-{% endif %}
-    {% endfor %}
+    </div>
 {% else %}
-    <p>This user has not posted anything yet.</p>
+    <div class="empty-state">
+        <p>This user has not posted anything yet.</p>
+    </div>
 {% endif %}
 {% endblock %}
