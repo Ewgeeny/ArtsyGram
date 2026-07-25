@@ -23,7 +23,30 @@
 
                     <form method="post">
                         {% csrf_token %}
-                        {{ login_form.as_p }}
+
+                        {% for error in login_form.non_field_errors %}
+                            <div class="form-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                        {% for field in login_form %}
+                            <div class="form-field">
+
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+                                {% for error in field.errors %}
+                                    <div class="form-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        {% endfor %}
 
                         <button type="submit" name="login_submit">
                             Log In
@@ -37,6 +60,12 @@
                     <form method="post">
                         {% csrf_token %}
 
+                        {% for error in register_form.non_field_errors %}
+                            <div class="form-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
                         {% for field in register_form %}
                             <div class="form-field">
 
@@ -48,14 +77,14 @@
 
                                 {% if field.help_text %}
                                     <div class="helptext-inline">
-                                        {{ field.help_text|safe }}
+                                        {{ field.help_text }}
                                     </div>
                                 {% endif %}
 
                                 {% for error in field.errors %}
-                                    <span class="field-error">
+                                    <div class="form-error">
                                         {{ error }}
-                                    </span>
+                                    </div>
                                 {% endfor %}
 
                             </div>

@@ -1,8 +1,12 @@
+"""Database models for the ArtsyGram application."""
+
 from django.contrib.auth.models import User
 from django.db import models
 
 
 class Category(models.Model):
+    """Represents a post category."""
+
     name = models.CharField(max_length=100)
 
     def __str__(self) -> str:
@@ -10,6 +14,8 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
+    """Represents a tag assigned to posts."""
+
     name = models.CharField(max_length=50)
 
     def __str__(self) -> str:
@@ -17,6 +23,8 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
+    """Represents an image post created by a user."""
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     image = models.ImageField(upload_to="posts")
@@ -30,6 +38,8 @@ class Post(models.Model):
 
 
 class Favorite(models.Model):
+    """Represents a user's saved post."""
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     saved_at = models.DateTimeField(auto_now_add=True)

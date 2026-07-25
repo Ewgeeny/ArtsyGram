@@ -1,17 +1,20 @@
+"""Views for the ArtsyGram application."""
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .forms import CategoryFilterForm, EditPostForm, PostForm
-from .models import Category, Favorite, Post, Tag
-from .services import toggle_favorite
+from .models import Category, Favorite, Post
+from .services import process_tags, toggle_favorite
 
 
 def welcome(request):
+    """Display the welcome page with login and registration forms."""
     if request.user.is_authenticated:
         return redirect("main-page")
 
@@ -47,7 +50,12 @@ def welcome(request):
 
 @login_required
 def main_page(request):
-    posts = Post.objects.order_by("-upload_date")
+    """Display the main page with posts and filtering options."""
+    posts = (
+        Post.objects.select_related("user", "category")
+        .prefetch_related("tags")
+        .order_by("-upload_date")
+    )
     filter_form = CategoryFilterForm(request.GET)
     categories = Category.objects.all()
 
@@ -61,9 +69,9 @@ def main_page(request):
         if tags_input:
             posts = posts.filter(tags__name=tags_input)
 
-    favorite_ids = Favorite.objects.filter(
-        user=request.user
-    ).values_list("post_id", flat=True)
+    favorite_ids = Favorite.objects.filter(user=request.user).values_list(
+        "post_id", flat=True
+    )
 
     context = {
         "posts": posts,
@@ -78,16 +86,15 @@ def main_page(request):
 
 @login_required
 def user_profile(request, username):
-    users = User.objects.filter(username=username)
+    """Display the public profile and posts of a user."""
+    profile_user = get_object_or_404(User, username=username)
 
-    if len(users) == 0:
-        return HttpResponse("User not found.", status=404)
-
-    profile_user = users[0]
-
-    posts = Post.objects.filter(
-        user=profile_user
-    ).order_by("-upload_date")
+    posts = (
+        Post.objects.filter(user=profile_user)
+        .select_related("category")
+        .prefetch_related("tags")
+        .order_by("-upload_date")
+    )
 
     context = {
         "profile_user": profile_user,
@@ -100,19 +107,17 @@ def user_profile(request, username):
 
 @login_required
 def user_favorites(request, username):
-    users = User.objects.filter(username=username)
-
-    if len(users) == 0:
-        return HttpResponse("User not found.", status=404)
-
-    profile_user = users[0]
+    """Display the authenticated user's favorite posts."""
+    profile_user = get_object_or_404(User, username=username)
 
     if request.user != profile_user:
         return HttpResponse("Not authorized.", status=403)
 
-    favorites = Favorite.objects.filter(
-        user=request.user
-    ).select_related("post").order_by("-saved_at")
+    favorites = (
+        Favorite.objects.filter(user=request.user)
+        .select_related("post")
+        .order_by("-saved_at")
+    )
 
     context = {
         "profile_user": profile_user,
@@ -124,6 +129,7 @@ def user_favorites(request, username):
 
 @login_required
 def create_post(request):
+    """Create a new post for the authenticated user."""
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
 
@@ -131,26 +137,13 @@ def create_post(request):
             post = Post.objects.create(
                 user=request.user,
                 title=form.cleaned_data["title"],
-                image=request.FILES["image"],
+                image=form.cleaned_data["image"],
                 description=form.cleaned_data["description"],
                 category=form.cleaned_data["category"],
                 upload_date=timezone.now(),
             )
 
-            tags = form.cleaned_data["tags"].split()
-
-            for tag in tags:
-                tag_name = tag.lstrip("#").lower()
-
-                if tag_name:
-                    existing_tags = Tag.objects.filter(name=tag_name)
-
-                    if len(existing_tags) == 0:
-                        tag = Tag.objects.create(name=tag_name)
-                    else:
-                        tag = existing_tags[0]
-
-                    post.tags.add(tag)
+            process_tags(post, form.cleaned_data["tags"].split())
 
             return redirect(
                 "user-profile",
@@ -168,14 +161,15 @@ def create_post(request):
 
 @login_required
 def delete_post(request, post_id):
+    """Delete one of the authenticated user's posts."""
     if request.method == "POST":
-        posts = Post.objects.filter(
+        post = Post.objects.filter(
             id=post_id,
             user=request.user,
-        )
+        ).first()
 
-        if len(posts) > 0:
-            posts[0].delete()
+        if post:
+            post.delete()
 
     return redirect(
         "user-profile",
@@ -185,6 +179,7 @@ def delete_post(request, post_id):
 
 @login_required
 def edit_post(request, post_id):
+    """Edit an existing post owned by the authenticated user."""
     posts = Post.objects.filter(id=post_id, user=request.user)
 
     if not posts.exists():
@@ -203,20 +198,7 @@ def edit_post(request, post_id):
 
             post.tags.clear()
 
-            tags = form.cleaned_data["tags"].split()
-
-            for tag in tags:
-                tag_name = tag.lstrip("#").lower()
-
-                if tag_name:
-                    existing_tags = Tag.objects.filter(name=tag_name)
-
-                    if len(existing_tags) == 0:
-                        tag = Tag.objects.create(name=tag_name)
-                    else:
-                        tag = existing_tags[0]
-
-                    post.tags.add(tag)
+            process_tags(post, form.cleaned_data["tags"].split())
 
             return redirect(
                 "user-profile",
@@ -228,9 +210,7 @@ def edit_post(request, post_id):
                 "title": post.title,
                 "description": post.description,
                 "category": post.category,
-                "tags": " ".join(
-                    [f"#{t.name}" for t in post.tags.all()]
-                ),
+                "tags": " ".join(f"#{t.name}" for t in post.tags.all()),
             }
         )
 
@@ -243,6 +223,7 @@ def edit_post(request, post_id):
 
 @login_required
 def toggle_favorite_view(request, post_id):
+    """Add or remove a post from the authenticated user's favorites."""
     if request.method == "POST":
         post = Post.objects.filter(id=post_id).first()
 
@@ -250,12 +231,12 @@ def toggle_favorite_view(request, post_id):
             toggle_favorite(request.user, post)
 
             if request.headers.get("HX-Request"):
-                if "favorites" in request.path:
+                if request.POST.get("from_favorites"):
                     return HttpResponse("")
 
-                favorite_ids = Favorite.objects.filter(
-                    user=request.user
-                ).values_list("post_id", flat=True)
+                favorite_ids = Favorite.objects.filter(user=request.user).values_list(
+                    "post_id", flat=True
+                )
 
                 return render(
                     request,
@@ -263,7 +244,4 @@ def toggle_favorite_view(request, post_id):
                     {"post": post, "favorite_ids": favorite_ids},
                 )
 
-    referer = request.META.get("HTTP_REFERER")
-    if referer:
-        return redirect(referer)
     return redirect("main-page")

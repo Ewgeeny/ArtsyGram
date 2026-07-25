@@ -7,7 +7,6 @@ requires-python = ">=3.14"
 
 dependencies = [
     "django>=6.0.6",
-    "djangorestframework>=3.17.1",
     "pillow>=12.3.0",
 ]
 
@@ -32,5 +31,22 @@ target-version = "py314"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "artsygram.settings"
-python_files = ["tests.py", "test_*.py", "*_tests.py"]
+python_files = [
+    "tests.py",
+    "test_*.py",
+    "*_tests.py",
+]
 addopts = "--cov=. --cov-report=term-missing"
+
+[tool.pylint.main]
+load-plugins = ["pylint_django"]
+django-settings-module = "artsygram.settings"
+ignore-paths = [
+    "^core[\\\\/]migrations[\\\\/].*$",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "imported-auth-user",
+    "invalid-str-returned",
+]

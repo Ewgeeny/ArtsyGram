@@ -58,7 +58,7 @@ All Posts - ArtsyGram
                     {% if post.tags.all %}
                         <div class="tag-list">
                             {% for tag in post.tags.all %}
-                                <a href="{% url 'main-page' %}?tags={{ tag.name }}">#{{ tag.name }}</a>
+                                <a href="{% url 'main-page' %}?tags={{ tag.name|urlencode }}">#{{ tag.name }}</a>
                             {% endfor %}
                         </div>
                     {% endif %}
@@ -66,9 +66,7 @@ All Posts - ArtsyGram
                     <div class="post-card-actions">
                         {% if post.user != request.user %}
                             {% include "core/favorite_button.html" with post=post favorite_ids=favorite_ids %}
-                        {% endif %}
-
-                        {% if post.user == request.user %}
+                        {% else %}
                             <form action="{% url 'edit-post' post.id %}" method="get">
                                 <button type="submit" class="btn btn-sm">
                                     Edit

@@ -76,5 +76,4 @@ class Migration(migrations.Migration):
                 ("tags", models.ManyToManyField(to="core.tag")),
             ],
         ),
-
     ]

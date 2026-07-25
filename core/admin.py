@@ -1,3 +1,5 @@
+"""Admin configuration for the ArtsyGram application."""
+
 from django.contrib import admin
 from .models import Category, Tag, Post, Favorite
 
