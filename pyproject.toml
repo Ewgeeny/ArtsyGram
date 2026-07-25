@@ -36,7 +36,14 @@ python_files = [
     "test_*.py",
     "*_tests.py",
 ]
-addopts = "--cov=. --cov-report=term-missing"
+addopts = "--cov=. --cov-report=term-missing --cov-config=pyproject.toml"
+
+[tool.coverage.run]
+omit = [
+    "artsygram/asgi.py",
+    "artsygram/wsgi.py",
+    "manage.py",
+]
 
 [tool.pylint.main]
 load-plugins = ["pylint_django"]

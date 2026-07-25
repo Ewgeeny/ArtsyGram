@@ -1,29 +1,13 @@
 """Tests for favorite models and services."""
 
-from django.contrib.auth.models import User
-from django.test import TestCase
-
-from core.models import Category, Favorite, Post
+from core.models import Favorite
 from core.services import toggle_favorite
 
+from . import BaseTestCase
 
-class FavoriteModelTest(TestCase):
+
+class FavoriteModelTest(BaseTestCase):
     """Tests for the Favorite model."""
-
-    def setUp(self):
-        """Create a user, category, and post for the tests."""
-        self.user = User.objects.create_user(
-            username="testuser",
-            password="testpass123",
-        )
-        self.category = Category.objects.create(name="testcategory")
-        self.post = Post.objects.create(
-            user=self.user,
-            title="Test Post",
-            description="Test description",
-            category=self.category,
-            upload_date="2026-01-01T00:00:00Z",
-        )
 
     def test_create_favorite(self):
         """Verify that a favorite stores the correct user and post."""
@@ -49,35 +33,15 @@ class FavoriteModelTest(TestCase):
             )
 
 
-class ToggleFavoriteTest(TestCase):
+class ToggleFavoriteTest(BaseTestCase):
     """Tests for the toggle_favorite service."""
-
-    def setUp(self):
-        """Create a user, category, and post for the tests."""
-        self.user = User.objects.create_user(
-            username="testuser",
-            password="testpass123",
-        )
-        self.category = Category.objects.create(name="testcategory")
-        self.post = Post.objects.create(
-            user=self.user,
-            title="Test Post",
-            description="Test description",
-            category=self.category,
-            upload_date="2026-01-01T00:00:00Z",
-        )
 
     def test_add_favorite(self):
         """Verify that toggle_favorite creates a favorite."""
         result = toggle_favorite(self.user, self.post)
 
         self.assertTrue(result)
-        self.assertTrue(
-            Favorite.objects.filter(
-                user=self.user,
-                post=self.post,
-            ).exists()
-        )
+        self.assertTrue(self._favorite_exists())
 
     def test_remove_favorite(self):
         """Verify that toggle_favorite removes an existing favorite."""
@@ -86,9 +50,4 @@ class ToggleFavoriteTest(TestCase):
         result = toggle_favorite(self.user, self.post)
 
         self.assertFalse(result)
-        self.assertFalse(
-            Favorite.objects.filter(
-                user=self.user,
-                post=self.post,
-            ).exists()
-        )
+        self.assertFalse(self._favorite_exists())
