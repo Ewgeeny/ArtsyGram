@@ -5,3 +5,4 @@ __pycache__/
 .coverage
 db.sqlite3
 media/
+static-prod/

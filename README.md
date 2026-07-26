@@ -54,6 +54,74 @@ ArtsyGram/
    python manage.py runserver
    ```
 
+## Production Deployment
+
+This project was prepared for deployment in a production environment following the concepts introduced in the Web Engineering course.
+
+### Deployment Decisions
+
+- **Hosting:** Render
+- **Application Server:** Uvicorn (ASGI)
+- **Static Files:** Django `collectstatic` together with WhiteNoise
+- **Media Files:** Uploaded images are stored in the `media` directory. In a real production environment, media files should be stored on persistent storage because they are not static files.
+
+### Local Production Setup
+
+Install the project dependencies:
+
+```bash
+uv sync
+```
+
+Apply database migrations:
+
+```bash
+uv run python manage.py migrate
+```
+
+Collect all static files:
+
+```bash
+uv run python manage.py collectstatic
+```
+
+Start the application using the production application server:
+
+```bash
+uv run uvicorn artsygram.asgi:application
+```
+
+The application will then be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+### Render Deployment
+
+The project can also be deployed to **Render**.
+
+**Build Command**
+
+```bash
+uv sync && uv run python manage.py migrate && uv run python manage.py collectstatic --noinput
+```
+
+**Start Command**
+
+```bash
+uv run uvicorn artsygram.asgi:application --host 0.0.0.0 --port $PORT
+```
+
+### Environment Variables
+
+The following environment variables should be configured:
+
+```
+SECRET_KEY=<your-secret-key>
+DEBUG=False
+```
+
 ## URL Structure
 
 - `/` - Welcome page with login/registration
@@ -75,11 +143,13 @@ python manage.py test
 
 ## Technologies
 
-- Django 5.1
-- Python 3.12
-- SQLite (default database)
-- HTML/CSS/JavaScript
-- HTMX for dynamic interactions
+- Django 6.0.6
+- Python 3.14
+- SQLite
+- HTML/CSS
+- HTMX
+- WhiteNoise
+- Uvicorn
 
 ## Author
 
