@@ -32,40 +32,36 @@ ArtsyGram/
 ## Installation
 
 1. Clone the repository
-2. Create a virtual environment:
+2. Install dependencies:
    ```bash
-   python -m venv venv
-   venv\Scripts\activate  # Windows
+   uv sync
    ```
-3. Install dependencies:
+3. Apply migrations:
    ```bash
-   pip install -r requirements.txt
+   uv run python manage.py migrate
    ```
-4. Apply migrations:
+4. Create a superuser (optional):
    ```bash
-   python manage.py migrate
+   uv run python manage.py createsuperuser
    ```
-5. Create a superuser (optional):
+5. Run the development server:
    ```bash
-   python manage.py createsuperuser
-   ```
-6. Run the development server:
-   ```bash
-   python manage.py runserver
+   uv run python manage.py runserver
    ```
 
 ## Production Deployment
 
-This project was prepared for deployment in a production environment following the concepts introduced in the Web Engineering course.
+This project is set up to run in a production-like environment locally using **Uvicorn** as the ASGI application server and **nginx** as a reverse proxy.
 
 ### Deployment Decisions
 
-- **Hosting:** Render
-- **Application Server:** Uvicorn (ASGI)
-- **Static Files:** Django `collectstatic` together with WhiteNoise
-- **Media Files:** Uploaded images are stored in the `media` directory. In a real production environment, media files should be stored on persistent storage because they are not static files.
+- **Hosting:** Local machine, accessed via local network or localhost
+- **Application Server:** Uvicorn (ASGI), started with `uv run uvicorn artsygram.asgi:application`
+- **Reverse Proxy:** nginx, forwards requests to Uvicorn and serves static/media files directly
+- **Static Files:** Django `collectstatic` collects all static files (CSS, JS) into `static-prod/`. nginx serves them directly from that directory. WhiteNoise middleware acts as a fallback.
+- **Media Files:** Uploaded images are stored in the `media/` directory on disk. nginx serves them directly. Since the database and media directory are local, uploads persist across server restarts.
 
-### Local Production Setup
+### Production Setup
 
 Install the project dependencies:
 
@@ -88,30 +84,10 @@ uv run python manage.py collectstatic
 Start the application using the production application server:
 
 ```bash
-uv run uvicorn artsygram.asgi:application
+uv run uvicorn artsygram.asgi:application --host 127.0.0.1 --port 8000
 ```
 
-The application will then be available at:
-
-```
-http://127.0.0.1:8000
-```
-
-### Render Deployment
-
-The project can also be deployed to **Render**.
-
-**Build Command**
-
-```bash
-uv sync && uv run python manage.py migrate && uv run python manage.py collectstatic --noinput
-```
-
-**Start Command**
-
-```bash
-uv run uvicorn artsygram.asgi:application --host 0.0.0.0 --port $PORT
-```
+The application will be available at `http://127.0.0.1:8000` (uvicorn directly) or through nginx on its configured port.
 
 ### Environment Variables
 
