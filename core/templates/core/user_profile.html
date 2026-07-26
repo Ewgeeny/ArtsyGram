@@ -67,7 +67,7 @@
                                 method="post"
                             >
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
                                     Delete
                                 </button>
                             </form>
