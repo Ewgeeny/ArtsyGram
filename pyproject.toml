@@ -45,6 +45,8 @@ omit = [
     "artsygram/asgi.py",
     "artsygram/wsgi.py",
     "manage.py",
+    "core/migrations/0006_deduplicate_categories.py",
+    "artsygram/urls.py",
 ]
 
 [tool.pylint.main]

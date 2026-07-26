@@ -21,17 +21,13 @@ class ProcessTagsTest(BaseTestCase):
         """Verify that leading hash characters are removed."""
         process_tags(self.post, ["#nature"])
 
-        self.assertTrue(
-            Tag.objects.filter(name="nature").exists()
-        )
+        self.assertTrue(Tag.objects.filter(name="nature").exists())
 
     def test_process_tags_lowercases(self):
         """Verify that tags are converted to lowercase."""
         process_tags(self.post, ["#Sunset"])
 
-        self.assertTrue(
-            Tag.objects.filter(name="sunset").exists()
-        )
+        self.assertTrue(Tag.objects.filter(name="sunset").exists())
 
     def test_process_tags_reuses_existing(self):
         """Verify that existing tags are reused instead of recreated."""
@@ -60,9 +56,7 @@ class ProcessTagsTest(BaseTestCase):
         """Verify that tags without a hash are processed correctly."""
         process_tags(self.post, ["travel"])
 
-        self.assertTrue(
-            Tag.objects.filter(name="travel").exists()
-        )
+        self.assertTrue(Tag.objects.filter(name="travel").exists())
         self.assertIn(
             Tag.objects.get(name="travel"),
             self.post.tags.all(),

@@ -180,12 +180,7 @@ def delete_post(request, post_id):
 @login_required
 def edit_post(request, post_id):
     """Edit an existing post owned by the authenticated user."""
-    posts = Post.objects.filter(id=post_id, user=request.user)
-
-    if not posts.exists():
-        return redirect("user-profile", username=request.user.username)
-
-    post = posts[0]
+    post = get_object_or_404(Post, id=post_id, user=request.user)
 
     if request.method == "POST":
         form = EditPostForm(request.POST)

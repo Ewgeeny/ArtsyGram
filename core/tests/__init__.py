@@ -23,6 +23,17 @@ class BaseTestCase(TestCase):
             category=self.category,
             upload_date="2026-01-01T00:00:00Z",
         )
+        self.client.login(
+            username="alice",
+            password="pass1234",
+        )
+
+    def _create_user(self, username="bob"):
+        """Create and return an additional user."""
+        return User.objects.create_user(
+            username=username,
+            password="pass1234",
+        )
 
     def _favorite_exists(self, user=None, post=None):
         """Return True if a Favorite exists for the given user and post."""

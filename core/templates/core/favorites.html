@@ -15,63 +15,9 @@ My Favorites - ArtsyGram
 {% if favorites %}
     <div class="post-grid">
         {% for favorite in favorites %}
-            <article class="post-card">
-                {% if favorite.post.image %}
-                    <img
-                        src="{{ favorite.post.image.url }}"
-                        alt="{{ favorite.post.title }}"
-                        class="post-card-image"
-                    >
-                {% endif %}
-
-                <div class="post-card-body">
-                    <a href="{% url 'user-profile' favorite.post.user.username %}" class="post-card-user">
-                        {{ favorite.post.user.username }}
-                    </a>
-
-                    <h2 class="post-card-title">{{ favorite.post.title }}</h2>
-
-                    <p class="post-card-desc">{{ favorite.post.description }}</p>
-
-                    {% if favorite.post.tags.all %}
-                        <div class="tag-list">
-                            {% for tag in favorite.post.tags.all %}
-                                <a href="{% url 'main-page' %}?tags={{ tag.name|urlencode }}">#{{ tag.name }}</a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    <div class="post-card-actions">
-                        <button
-                            hx-post="{% url 'toggle-favorite' favorite.post.id %}"
-                            hx-target="closest article"
-                            hx-swap="outerHTML"
-                            hx-vals='{"from_favorites": "true"}'
-                            hx-confirm="Remove from favorites?"
-                            class="btn btn-danger">
-                            &#10005; Remove
-                        </button>
-
-                        {% if favorite.post.user == request.user %}
-                            <form action="{% url 'edit-post' favorite.post.id %}" method="get">
-                                <button type="submit" class="btn btn-sm">
-                                    Edit
-                                </button>
-                            </form>
-
-                            <form
-                                action="{% url 'delete-post' favorite.post.id %}"
-                                method="post"
-                            >
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                    Delete
-                                </button>
-                            </form>
-                        {% endif %}
-                    </div>
-                </div>
-            </article>
+            {% with post=favorite.post %}
+                {% include "core/post_card.html" with show_author=True source="favorites" %}
+            {% endwith %}
         {% endfor %}
     </div>
 {% else %}

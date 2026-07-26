@@ -13,10 +13,6 @@ from core.models import Category
 class CategoryFilterFormTest(TestCase):
     """Tests for the category and tag filter form."""
 
-    def setUp(self):
-        """Create a category used by the form tests."""
-        self.category = Category.objects.create(name="Art")
-
     def test_valid_single_tag(self):
         """Verify that a single tag is accepted."""
         form = CategoryFilterForm(data={"tags": "sunset"})

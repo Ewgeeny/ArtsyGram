@@ -1,0 +1,67 @@
+<article class="post-card">
+    {% if post.image %}
+        <img
+            src="{{ post.image.url }}"
+            alt="{{ post.title }}"
+            class="post-card-image"
+        >
+    {% endif %}
+
+    <div class="post-card-body">
+        {% if show_author %}
+            <a href="{% url 'user-profile' post.user.username %}" class="post-card-user">
+                {{ post.user.username }}
+            </a>
+        {% endif %}
+
+        <h2 class="post-card-title">{{ post.title }}</h2>
+
+        {% if post.category %}
+            <span class="post-card-category">{{ post.category.name }}</span>
+        {% endif %}
+
+        <p class="post-card-desc">{{ post.description }}</p>
+
+        {% if post.tags.all %}
+            <div class="tag-list">
+                {% for tag in post.tags.all %}
+                    <a href="{% url 'main-page' %}?tags={{ tag.name|urlencode }}">#{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="post-card-actions">
+            {% if source == "favorites" %}
+                <button
+                    hx-post="{% url 'toggle-favorite' post.id %}"
+                    hx-target="closest article"
+                    hx-swap="outerHTML"
+                    hx-vals='{"from_favorites": "true"}'
+                    hx-confirm="Remove from favorites?"
+                    class="btn btn-danger">
+                    &#10005; Remove
+                </button>
+            {% elif post.user != request.user %}
+                {% include "core/favorite_button.html" with post=post favorite_ids=favorite_ids %}
+            {% endif %}
+
+            {% if post.user == request.user %}
+                <form action="{% url 'edit-post' post.id %}" method="get">
+                    <button type="submit" class="btn btn-sm">
+                        Edit
+                    </button>
+                </form>
+
+                <form
+                    action="{% url 'delete-post' post.id %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                        Delete
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</article>
